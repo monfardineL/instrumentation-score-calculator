@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Run unit tests
+        run: uv run pytest -v
+
+      - name: CLI smoke test (offline fixture)
+        run: |
+          uv run isc rules
+          uv run isc score --config examples/isc.yaml --fixture examples/tms_fixture.json --min-score 100
+          uv run isc score --config examples/isc.yaml --fixture examples/tms_fixture.json --format json > /dev/null

@@ -1,0 +1,143 @@
+{
+  "target_key": "appid",
+  "target_value": "tms",
+  "lookback": "1h",
+  "metrics": [
+    {
+      "name": "http_server_request_duration_seconds",
+      "metric_type": "histogram",
+      "unit": "s",
+      "help_text": "Duration of HTTP server requests.",
+      "labels": [
+        {
+          "appid": "tms",
+          "service.name": "tms-api",
+          "deployment.environment": "prod",
+          "http.request.method": "POST"
+        }
+      ],
+      "unique_series_count": 42
+    },
+    {
+      "name": "tms_orders_processed_total",
+      "metric_type": "counter",
+      "unit": "1",
+      "help_text": "Total processed TMS orders.",
+      "labels": [
+        {
+          "appid": "tms",
+          "service.name": "tms-api",
+          "service.version": "2.4.1"
+        }
+      ],
+      "unique_series_count": 12
+    }
+  ],
+  "log_stats": {
+    "total_lines": 1840,
+    "total_bytes": 412000,
+    "buckets_per_minute": [28, 31, 30, 29, 35, 32, 30, 31, 29, 33],
+    "level_counts": {
+      "INFO": 1620,
+      "WARN": 140,
+      "ERROR": 40,
+      "DEBUG": 40
+    }
+  },
+  "logs": [
+    {
+      "timestamp": "2026-11-17T12:00:01Z",
+      "line": "{\"msg\": \"Order dispatched\", \"level\": \"INFO\", \"trace_id\": \"abc123\", \"span_id\": \"def456\"}",
+      "labels": {
+        "appid": "tms",
+        "service.name": "tms-api",
+        "level": "INFO"
+      },
+      "structured_fields": {
+        "msg": "Order dispatched",
+        "level": "INFO",
+        "trace_id": "abc123",
+        "span_id": "def456"
+      },
+      "level": "INFO",
+      "trace_id": "abc123",
+      "span_id": "def456"
+    },
+    {
+      "timestamp": "2026-11-17T12:00:05Z",
+      "line": "{\"msg\": \"Carrier rate lookup succeeded\", \"level\": \"INFO\", \"trace_id\": \"abc124\", \"span_id\": \"def457\"}",
+      "labels": {
+        "appid": "tms",
+        "service.name": "tms-api",
+        "level": "INFO"
+      },
+      "structured_fields": {
+        "msg": "Carrier rate lookup succeeded",
+        "level": "INFO",
+        "trace_id": "abc124",
+        "span_id": "def457"
+      },
+      "level": "INFO",
+      "trace_id": "abc124",
+      "span_id": "def457"
+    },
+    {
+      "timestamp": "2026-11-17T12:00:10Z",
+      "line": "{\"msg\": \"Retryable timeout calling carrier API\", \"level\": \"WARN\", \"trace_id\": \"abc125\", \"span_id\": \"def458\"}",
+      "labels": {
+        "appid": "tms",
+        "service.name": "tms-api",
+        "level": "WARN"
+      },
+      "structured_fields": {
+        "msg": "Retryable timeout calling carrier API",
+        "level": "WARN",
+        "trace_id": "abc125",
+        "span_id": "def458"
+      },
+      "level": "WARN",
+      "trace_id": "abc125",
+      "span_id": "def458"
+    }
+  ],
+  "traces": [
+    {
+      "trace_id": "abc123",
+      "spans": [
+        {
+          "span_id": "root1",
+          "parent_span_id": null,
+          "name": "POST /api/v1/orders",
+          "service_name": "tms-api",
+          "status_code": "OK",
+          "resource_attributes": {
+            "appid": "tms",
+            "service.name": "tms-api"
+          },
+          "span_attributes": {
+            "http.request.method": "POST"
+          }
+        },
+        {
+          "span_id": "child1",
+          "parent_span_id": "root1",
+          "name": "SELECT orders",
+          "service_name": "tms-api",
+          "status_code": "OK",
+          "resource_attributes": {
+            "appid": "tms",
+            "service.name": "tms-api"
+          },
+          "span_attributes": {
+            "db.system": "postgresql"
+          }
+        }
+      ]
+    }
+  ],
+  "profiling": {
+    "profile_types": ["process_cpu:cpu:nanoseconds:cpu:nanoseconds", "memory:alloc_space:bytes:space:bytes"],
+    "sample_functions": ["tms/orders.Dispatch", "tms/rates.Lookup", "runtime.mallocgc"],
+    "total_samples": 12450
+  }
+}

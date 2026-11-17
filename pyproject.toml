@@ -1,0 +1,30 @@
+[project]
+name = "instrumentation-score-calculator"
+version = "0.1.0"
+description = "CLI tool to evaluate telemetry instrumentation quality across Prometheus/Mimir, Loki, Tempo, and Pyroscope via Grafana MCP."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.0.0",
+    "pyyaml>=6.0",
+    "rich>=13.7.0",
+    "typer>=0.12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[project.scripts]
+isc = "isc.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["isc"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

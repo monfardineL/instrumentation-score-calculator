@@ -1,0 +1,38 @@
+name: tms-production
+selector: "appid=tms"
+lookback: 1h
+
+datasources:
+  prometheus_uid: "mimir-prod"
+  loki_uid: "loki-prod"
+  tempo_uid: "tempo-prod"
+  pyroscope_uid: "pyroscope-prod"
+
+selector_mapping:
+  prometheus_label: "appid"
+  loki_label: "appid"
+  tempo_attribute: "appid"
+  pyroscope_label: "appid"
+
+log_thresholds:
+  sample_limit: 1000
+  min_logs_per_hour: 10
+  max_logs_per_minute: 5000
+  max_debug_ratio: 0.30
+  max_error_ratio: 0.15
+  max_duplicate_ratio: 0.40
+  max_boilerplate_ratio: 0.25
+  min_structured_ratio: 0.80
+  min_trace_correlation_ratio: 0.50
+
+mcp:
+  # Option A: Remote mcp-grafana web service (no auth required by default)
+  # transport: auto uses SSE if URL ends with /sse, otherwise Streamable HTTP (/mcp)
+  transport: auto
+  url: "http://localhost:8000/mcp"
+  url_env: GRAFANA_MCP_URL
+  # Option B: Local stdio mode (leave `url` unset and remove GRAFANA_MCP_URL)
+  command: uvx
+  args: ["mcp-grafana"]
+  grafana_url_env: GRAFANA_URL
+  grafana_token_env: GRAFANA_SERVICE_ACCOUNT_TOKEN
